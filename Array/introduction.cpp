@@ -34,6 +34,6 @@ int main()
     delete[] p;
     p = NULL;
 
-    cout << p << endl; // getting 0, if trying to access the pointer
+    cout << p << endl; // getting 0, if trying to access the pointer p
     return 0;
 }
