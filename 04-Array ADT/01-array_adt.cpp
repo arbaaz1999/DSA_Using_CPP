@@ -20,6 +20,7 @@ public:
     int remove(U index);
     void swap(T *el1, T *el2);
     int linear_search(T key);
+    int binary_search(T key);
 };
 
 template <class T, class U>
@@ -105,25 +106,53 @@ int Array<T, U>::linear_search(T key)
     {
         if (key == A[i])
         {
-            swap(&A[i], &A[0]);
+            // swap(&A[i], &A[0]);
             return i;
         }
     }
     return -1;
 }
 
+template <class T, class U>
+int Array<T, U>::binary_search(T key)
+{
+    int low = 0, high = length - 1, i = 0;
+    while (low <= high)
+    {
+        int mid = (low + high) / 2;
+        if (key == A[mid])
+        {
+            if (mid == 0 || A[mid - 1] != key)
+                return mid;
+            else
+                high = mid - 1;
+        }
+        else if (key < A[mid])
+            high = mid - 1;
+        else
+            low = mid + 1;
+    }
+
+    return -1;
+}
+
 int main()
 {
-    int A[] = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40};
+    int A[] = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 22, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40};
     int length = *(&A + 1) - A;
-    Array arr(A, 20, length);
-    auto start = high_resolution_clock::now();
-    int foundIndex = arr.linear_search(40);
-    cout << "Element found at : " << foundIndex << " index " << endl;
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cout << "Time taken to find index is : " << duration.count() << endl;
+    Array arr(A, 30, length);
+    auto l_start = high_resolution_clock::now();
+    cout << "Element found at : " << arr.linear_search(22) << " index " << endl;
+    auto l_stop = high_resolution_clock::now();
+    auto l_duration = duration_cast<microseconds>(l_stop - l_start);
+    auto b_start = high_resolution_clock::now();
+    cout << "Element found at : " << arr.binary_search(22) << " index " << endl;
+    auto b_stop = high_resolution_clock::now();
+    auto b_duration = duration_cast<microseconds>(b_stop - b_start);
+    cout << "Time taken by Linear search is : " << l_duration.count() << endl;
+    cout << "Time taken by Binary search is : " << b_duration.count() << endl;
+    cout << "Diference in Times is : " << l_duration.count() - b_duration.count() << endl;
     arr.display();
-    cout << "Lengt of given array is : " << arr.length << endl;
+    cout << "Length of given array is : " << arr.length << endl;
     return 0;
 }
