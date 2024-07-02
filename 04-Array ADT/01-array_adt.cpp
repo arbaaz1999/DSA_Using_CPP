@@ -16,24 +16,29 @@ public:
     Array(T A[], U size, U l);
     void display();
     void append(T el);
-    void insert(U index, T el);
-    int remove(U index);
+    U insert(U index, T el);
+    U remove(U index);
     void swap(T *el1, T *el2);
-    int linear_search(T key);
-    int binary_search(T key);
+    U linear_search(T key);
+    U binary_search(T key);
+    T get(U index);
+    U set(U index, T element);
+    T max();
+    T min();
+    T sum();
+    float average();
 };
-
 template <class T, class U>
 Array<T, U>::Array(T X[], U s, U l)
 {
     size = s;
     length = l;
     A = new T[size];
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < length; i++)
     {
         A[i] = X[i];
     };
-}
+};
 template <class T, class U>
 void Array<T, U>::display()
 {
@@ -43,22 +48,16 @@ void Array<T, U>::display()
     };
     cout << endl;
 };
-
 template <class T, class U>
 void Array<T, U>::append(T element)
 {
     A[length] = element;
     length++;
-}
-
+};
 template <class T, class U>
-void Array<T, U>::insert(U index, T element)
+U Array<T, U>::insert(U index, T element)
 {
-    if (index > length || index < 0)
-    {
-        throw std::invalid_argument("Index should be less than or equal to the length of given Array and greater than or equal to 0");
-    }
-    else
+    if (index >= 0 && index < length)
     {
         for (int i = length; i > index; i--)
         {
@@ -66,17 +65,16 @@ void Array<T, U>::insert(U index, T element)
         }
         A[index] = element;
         length++;
-    };
-}
-
-template <class T, class U>
-int Array<T, U>::remove(U index)
-{
-    if (index > length || index < 0)
-    {
-        throw std::invalid_argument("Index should be less than or equal to the length of given Array and greater than or equal to 0");
     }
     else
+    {
+        return -1;
+    }
+};
+template <class T, class U>
+U Array<T, U>::remove(U index)
+{
+    if (index >= 0 && index < length)
     {
         int x = A[index];
         for (int i = index; i < length - 1; i++)
@@ -87,9 +85,8 @@ int Array<T, U>::remove(U index)
         return x;
     };
 
-    return 0;
-}
-
+    return -1;
+};
 template <class T, class U>
 void Array<T, U>::swap(T *el1, T *el2)
 {
@@ -97,10 +94,9 @@ void Array<T, U>::swap(T *el1, T *el2)
     temp = *el1;
     *el1 = *el2;
     *el2 = temp;
-}
-
+};
 template <class T, class U>
-int Array<T, U>::linear_search(T key)
+U Array<T, U>::linear_search(T key)
 {
     for (int i = 0; i < length; i++)
     {
@@ -111,10 +107,9 @@ int Array<T, U>::linear_search(T key)
         }
     }
     return -1;
-}
-
+};
 template <class T, class U>
-int Array<T, U>::binary_search(T key)
+U Array<T, U>::binary_search(T key)
 {
     int low = 0, high = length - 1, i = 0;
     while (low <= high)
@@ -134,25 +129,76 @@ int Array<T, U>::binary_search(T key)
     }
 
     return -1;
-}
-
+};
+template <class T, class U>
+T Array<T, U>::get(U index)
+{
+    if (index >= 0 && index < length)
+    {
+        return A[index];
+    };
+    return -1;
+};
+template <class T, class U>
+U Array<T, U>::set(U index, T element)
+{
+    if (index >= 0 && index < length)
+    {
+        A[index] = element;
+    }
+    else
+        return -1;
+};
+template <class T, class U>
+T Array<T, U>::max()
+{
+    T max = A[0];
+    for (int i = 0; i < length; i++)
+    {
+        if (A[i] > max)
+            max = A[i];
+    }
+    return max;
+};
+template <class T, class U>
+T Array<T, U>::min()
+{
+    T min = A[0];
+    for (int i = 0; i < length; i++)
+    {
+        if (A[i] < min)
+            min = A[i];
+    }
+    return min;
+};
+template <class T, class U>
+T Array<T, U>::sum()
+{
+    T total = 0;
+    for (int i = 0; i < length; i++)
+    {
+        total += A[i];
+    }
+    return total;
+};
+template <class T, class U>
+float Array<T, U>::average()
+{
+    T total = sum();
+    return total / length;
+};
 int main()
 {
-    int A[] = {2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 22, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40};
-    int length = *(&A + 1) - A;
+    int A[] = {13, 15, 12, 9, 20, 25, 17};
+    int length = sizeof(A) / sizeof(A[0]);
     Array arr(A, 30, length);
-    auto l_start = high_resolution_clock::now();
-    cout << "Element found at : " << arr.linear_search(22) << " index " << endl;
-    auto l_stop = high_resolution_clock::now();
-    auto l_duration = duration_cast<microseconds>(l_stop - l_start);
-    auto b_start = high_resolution_clock::now();
-    cout << "Element found at : " << arr.binary_search(22) << " index " << endl;
-    auto b_stop = high_resolution_clock::now();
-    auto b_duration = duration_cast<microseconds>(b_stop - b_start);
-    cout << "Time taken by Linear search is : " << l_duration.count() << endl;
-    cout << "Time taken by Binary search is : " << b_duration.count() << endl;
-    cout << "Diference in Times is : " << l_duration.count() - b_duration.count() << endl;
     arr.display();
+    int element = arr.get(3);
+    element == -1 ? cout << "Invalid Index" << endl : cout << element << endl;
+    cout << "maximum element is " << arr.max() << endl;
+    cout << "minimum element is " << arr.min() << endl;
+    cout << "sum of all elements is " << arr.sum() << endl;
+    cout << "average of all elements is " << arr.average() << endl;
     cout << "Length of given array is : " << arr.length << endl;
     return 0;
-}
+};
