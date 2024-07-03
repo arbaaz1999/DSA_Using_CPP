@@ -15,7 +15,10 @@ public:
     U length = 0;
     Array(T A[], U size, U l);
     void display();
-    void append(T el);
+    void pop();
+    void push(T el);
+    void shift();
+    void unshift(T el);
     U insert(U index, T el);
     U remove(U index);
     void swap(T *el1, T *el2);
@@ -27,6 +30,15 @@ public:
     T min();
     T sum();
     float average();
+    void reverse();
+    U is_sorted();
+    void insert_sorted(T el);
+    ~Array()
+    {
+        A = NULL;
+        delete[] A;
+        cout << "Destructor is called" << endl;
+    }
 };
 template <class T, class U>
 Array<T, U>::Array(T X[], U s, U l)
@@ -49,9 +61,33 @@ void Array<T, U>::display()
     cout << endl;
 };
 template <class T, class U>
-void Array<T, U>::append(T element)
+void Array<T, U>::pop()
+{
+    length--;
+};
+template <class T, class U>
+void Array<T, U>::push(T element)
 {
     A[length] = element;
+    length++;
+};
+template <class T, class U>
+void Array<T, U>::shift()
+{
+    for (int i = 1; i < length; i++)
+    {
+        A[i - 1] = A[i];
+    }
+    length--;
+};
+template <class T, class U>
+void Array<T, U>::unshift(T el)
+{
+    for (int i = length; i > 0; i--)
+    {
+        A[i + 1] = A[i];
+    }
+    A[0] = el;
     length++;
 };
 template <class T, class U>
@@ -102,7 +138,7 @@ U Array<T, U>::linear_search(T key)
     {
         if (key == A[i])
         {
-            // swap(&A[i], &A[0]);
+            swap(&A[i], &A[0]);
             return i;
         }
     }
@@ -187,18 +223,45 @@ float Array<T, U>::average()
     T total = sum();
     return total / length;
 };
+template <class T, class U>
+void Array<T, U>::reverse()
+{
+    for (int i = 0, j = length - 1; i < j; i++, j--)
+    {
+        swap(&A[i], &A[j]);
+    };
+};
+template <class T, class U>
+U Array<T, U>::is_sorted()
+{
+    for (int i = 0; i < length - 1; i++)
+    {
+        if (A[i] > A[i + 1])
+            return 0;
+    };
+    return 1;
+};
+template <class T, class U>
+void Array<T, U>::insert_sorted(T el)
+{
+    int i = length - 1;
+    while (i >= 0 && el < A[i])
+    {
+        if (A[i] > el)
+            A[i + 1] = A[i];
+        i--;
+    }
+    A[i + 1] = el;
+    length++;
+};
 int main()
 {
-    int A[] = {13, 15, 12, 9, 20, 25, 17};
+    int A[] = {2, 4, 6, 9, 13, 15, 18, 20};
     int length = sizeof(A) / sizeof(A[0]);
     Array arr(A, 30, length);
-    arr.display();
-    int element = arr.get(3);
-    element == -1 ? cout << "Invalid Index" << endl : cout << element << endl;
-    cout << "maximum element is " << arr.max() << endl;
-    cout << "minimum element is " << arr.min() << endl;
-    cout << "sum of all elements is " << arr.sum() << endl;
-    cout << "average of all elements is " << arr.average() << endl;
+    cout << arr.is_sorted() << endl;
+    arr.insert_sorted(16);
     cout << "Length of given array is : " << arr.length << endl;
+    arr.display();
     return 0;
 };
