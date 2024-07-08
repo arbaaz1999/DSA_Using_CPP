@@ -33,6 +33,8 @@ public:
     void reverse();
     U is_sorted();
     void insert_sorted(T el);
+    void left_rotate_by(U d);
+    void right_rotate_by(U d);
     ~Array()
     {
         A = NULL;
@@ -254,14 +256,48 @@ void Array<T, U>::insert_sorted(T el)
     A[i + 1] = el;
     length++;
 };
+template <class T, class U>
+void Array<T, U>::left_rotate_by(U d)
+{
+    // parameter d is number of elements by which the array has to be rotated.
+    int j = 1;
+    while (j <= d)
+    {
+        int last = A[0];
+        for (int i = 0; i < length - 1; i++)
+        {
+            A[i] = A[i + 1];
+        }
+        A[length - 1] = last;
+        j++;
+    }
+};
+template <class T, class U>
+void Array<T, U>::right_rotate_by(U d)
+{
+    // parameter d is number of elements by which the array has to be rotated.
+    int j = 1;
+    while (j <= d)
+    {
+        int first = A[length - 1];
+        for (int i = length - 1; i >= 0; i--)
+        {
+            A[i] = A[i - 1];
+        }
+        A[0] = first;
+        j++;
+    }
+};
+
 int main()
 {
     int A[] = {2, 4, 6, 9, 13, 15, 18, 20};
     int length = sizeof(A) / sizeof(A[0]);
     Array arr(A, 30, length);
-    cout << arr.is_sorted() << endl;
-    arr.insert_sorted(16);
-    cout << "Length of given array is : " << arr.length << endl;
+    arr.right_rotate_by(3);
     arr.display();
+    arr.left_rotate_by(3);
+    arr.display();
+    cout << "Length of given array is : " << arr.length << endl;
     return 0;
 };
