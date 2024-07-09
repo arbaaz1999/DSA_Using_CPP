@@ -35,6 +35,7 @@ public:
     void insert_sorted(T el);
     void left_rotate_by(U d);
     void right_rotate_by(U d);
+    T *merge(T B[], U n);
     ~Array()
     {
         A = NULL;
@@ -288,15 +289,42 @@ void Array<T, U>::right_rotate_by(U d)
         j++;
     }
 };
+template <class T, class U>
+T *Array<T, U>::merge(T B[], U n)
+{
+    T *C = new int[length + n]{0};
+    int i, j, k;
+    i = j = k = 0;
+    // copy elements from A and B in C in sorted order
+    while (i < length && j < n)
+    {
+        if (A[i] < B[j])
+            C[k++] = A[i++];
+        else
+            C[k++] = B[j++];
+    }
+    // copy remaining elements from A and B to C
+    for (; i < length; i++)
+        C[k++] = A[i++];
+    for (; j < n; j++)
+        C[k++] = B[j++];
+
+    return C;
+}
 
 int main()
 {
-    int A[] = {2, 4, 6, 9, 13, 15, 18, 20};
+    int A[] = {2, 5, 9, 13, 15};
+    int B[] = {3, 7, 11, 15, 19};
+    int length_b = sizeof(B) / sizeof(B[0]);
     int length = sizeof(A) / sizeof(A[0]);
     Array arr(A, 30, length);
-    arr.right_rotate_by(3);
-    arr.display();
-    arr.left_rotate_by(3);
+    int *C = arr.merge(B, length_b);
+    for (int i = 0; i < 10; i++)
+        cout << C[i] << " ";
+    cout << endl;
+    C = NULL;
+    delete[] C;
     arr.display();
     cout << "Length of given array is : " << arr.length << endl;
     return 0;

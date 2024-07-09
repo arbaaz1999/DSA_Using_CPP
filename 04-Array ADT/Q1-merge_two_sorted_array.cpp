@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-void merge(int nums1[], int m, int nums2[], int n)
+void merge_two_sorted_array(int nums1[], int m, int nums2[], int n)
 {
     // last index of nums1
     int last = (m + n) - 1;
@@ -20,7 +20,7 @@ void merge(int nums1[], int m, int nums2[], int n)
         }
         last--;
     }
-    // copy remaining ones from nums1
+    // copy remaining ones from nums2
     while (n > 0)
     {
         nums1[last] = nums2[n - 1];
@@ -32,7 +32,7 @@ void merge(int nums1[], int m, int nums2[], int n)
 int main()
 {
     int nums1[] = {1, 2, 3, 0, 0, 0}, m = 3, nums2[] = {2, 5, 6}, n = 3;
-    merge(nums1, m, nums2, n);
+    merge_two_sorted_array(nums1, m, nums2, n);
     cout << "Nums1 array is" << endl;
     for (int i = 0; i < m + n; i++)
     {
