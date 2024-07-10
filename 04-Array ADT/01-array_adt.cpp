@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <chrono>
+#include <unordered_set>
 using namespace std::chrono;
 using namespace std;
 
@@ -36,6 +37,8 @@ public:
     void left_rotate_by(U d);
     void right_rotate_by(U d);
     T *merge(T B[], U n);
+    T *_union(T B[], U n);
+    T *intersection(T B[], U n);
     ~Array()
     {
         A = NULL;
@@ -310,17 +313,67 @@ T *Array<T, U>::merge(T B[], U n)
         C[k++] = B[j++];
 
     return C;
+};
+template <class T, class U>
+T *Array<T, U>::_union(T B[], U n)
+{
+    T *C = new int[length + n]{0};
+    int i, j, k;
+    i = j = k = 0;
+    // copy elements from A and B in C in sorted order
+    while (i < length && j < n)
+    {
+        if (A[i] < B[j])
+            C[k++] = A[i++];
+        else if (A[i] == B[j])
+        {
+            C[k++] = A[i++];
+            j++;
+        }
+        else
+            C[k++] = B[j++];
+    }
+    // copy remaining elements from A and B to C
+    for (; i < length; i++)
+        C[k++] = A[i++];
+
+    for (; j < n; j++)
+        C[k++] = B[j++];
+
+    return C;
+};
+template <class T, class U>
+T *Array<T, U>::intersection(T B[], U n)
+{
+    T *C = new int[length + n]{0};
+    int i, j, k;
+    i = j = k = 0;
+    // copy elements from A and B in C in sorted order
+    while (i < length && j < n)
+    {
+        if (A[i] < B[j])
+            i++;
+        else if (A[i] == B[j])
+        {
+            C[k++] = A[i++];
+            j++;
+        }
+        else
+            j++;
+    };
+    return C;
 }
 
 int main()
 {
-    int A[] = {2, 5, 9, 13, 15};
-    int B[] = {3, 7, 11, 15, 19};
+    int A[] = {2, 5, 9, 13, 15, 15, 15};
+    int B[] = {3, 9, 11, 15, 19, 19, 19};
     int length_b = sizeof(B) / sizeof(B[0]);
     int length = sizeof(A) / sizeof(A[0]);
     Array arr(A, 30, length);
-    int *C = arr.merge(B, length_b);
-    for (int i = 0; i < 10; i++)
+    int *C = arr.intersection(B, length_b);
+    int length_c = sizeof(C) / sizeof(C[0]);
+    for (int i = 0; i < length_c; i++)
         cout << C[i] << " ";
     cout << endl;
     C = NULL;
