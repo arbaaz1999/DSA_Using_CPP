@@ -366,18 +366,10 @@ T *Array<T, U>::intersection(T B[], U n)
 
 int main()
 {
-    int A[] = {2, 5, 9, 13, 15, 15, 15};
-    int B[] = {3, 9, 11, 15, 19, 19, 19};
-    int length_b = sizeof(B) / sizeof(B[0]);
+    int A[] = {1, 2, 3, 4, 5, 6, 7};
     int length = sizeof(A) / sizeof(A[0]);
     Array arr(A, 30, length);
-    int *C = arr.intersection(B, length_b);
-    int length_c = sizeof(C) / sizeof(C[0]);
-    for (int i = 0; i < length_c; i++)
-        cout << C[i] << " ";
-    cout << endl;
-    C = NULL;
-    delete[] C;
+    arr.right_rotate_by(3);
     arr.display();
     cout << "Length of given array is : " << arr.length << endl;
     return 0;
