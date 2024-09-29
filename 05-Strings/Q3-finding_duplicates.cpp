@@ -7,7 +7,7 @@ Problem: To find the duplicates in a string using bitwise operator;
 
 int main()
 {
-    char s[] = "finding";
+    string s = "finding";
     int n = sizeof(s) / sizeof(s[0]);
     long int h = 0, a = 0;
     for (int i = 0; i < n; i++)
